@@ -1,38 +1,30 @@
 {
   "name": "webgl-babysteps",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
+  "version": "0.0.1",
+  "description": "3D-polyeder with user-provided image projected on its sides. First steps with WebGL 3D rendering using Three.js",
+  "main": "js/main.mjs",
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.5",
+    "@babel/eslint-plugin": "^7.14.5",
+    "@babel/plugin-syntax-class-properties": "^7.12.13",
+    "@babel/preset-env": "^7.14.5",
+    "browser-sync": "^2.26.14",
+    "eslint": "^7.28.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "run": "browser-sync --config bs-config.js",
+    "lint": "eslint js/**/*",
+    "lint:fix": "eslint js/**/* --fix"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "keywords": [
+    "webgl",
+    "three-js",
+    "learning",
+    "project",
+    "canvas",
+    "3d",
+    "polyeder"
+  ],
+  "author": "moritz rehbach",
+  "license": "MIT"
 }
