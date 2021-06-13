@@ -1,9 +1,9 @@
 import throwIfNoWebGl from "./webgl-availability/throwIfNoWebGl.mjs";
-import initScene from "./scene/scene.mjs";
+import initScene from "./scene/initScene.mjs";
 import {cube} from "./polyeder/polyeder.mjs";
-import Renderer from "./scene/renderer.mjs";
-import addDirectionalLight from "./light/addDirectionalLight.js";
-import addAmbientLight from "./light/addAmbientLight.js";
+import Renderer from "./scene/Renderer.mjs";
+import addDirectionalLight from "./light/addDirectionalLight.mjs";
+import addAmbientLight from "./light/addAmbientLight.mjs";
 
 throwIfNoWebGl();
 document.addEventListener('DOMContentLoaded', () => {

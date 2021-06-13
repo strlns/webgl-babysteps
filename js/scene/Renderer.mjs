@@ -1,4 +1,5 @@
 import {WebGLRenderer} from "../lib/three.module.js";
+import {resizeHandler} from "./resizeHandler.mjs";
 
 export default class Renderer {
     camera;
@@ -8,12 +9,16 @@ export default class Renderer {
      */
     renderer;
     frame = 0;
+    /**
+     * @type resizeHandler
+     */
+    resizeHandler;
 
     constructor(camera, scene) {
         this.camera = camera;
         this.scene = scene;
         this.renderer = new WebGLRenderer();
-        this.renderer.shadowMap = true;
+        this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
@@ -28,5 +33,6 @@ export default class Renderer {
             this.frame++;
         }
         animate();
+        window.addEventListener('resize', resizeHandler(this))
     }
 }
