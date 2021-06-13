@@ -10,10 +10,6 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        /*
-        trying this out here for the first time, otherwise i always end up
-        with a mixed style.
-         */
-        "semi": ["warn", "never"]
+        "semi": ["warn", "always", {omitLastInOneLineBlock: true}]
     }
 };
