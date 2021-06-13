@@ -4,17 +4,22 @@ import {resizeHandler} from "../scene/resizeHandler.mjs";
 export default class Renderer {
     camera;
     scene;
+
     /**
      * @type WebGLRenderer
      */
     renderer;
     frame = 0;
+
     /**
      * @type resizeHandler
      */
     resizeHandler;
 
-    callbacks = [];
+    renderCallbacks = [];
+
+    resizeCallbacks = [];
+
 
     constructor(camera, scene) {
         this.camera = camera;
@@ -28,7 +33,7 @@ export default class Renderer {
         document.body.appendChild(this.renderer.domElement);
         const animate = () => {
             requestAnimationFrame(animate);
-            for (const fn of this.callbacks) {
+            for (const fn of this.renderCallbacks) {
                 fn.call(this, this.frame);
             }
             this.renderer.render(this.scene, this.camera);
@@ -39,13 +44,24 @@ export default class Renderer {
     }
 
     registerCallback(callback) {
-        this.callbacks.push(callback);
+        this.renderCallbacks.push(callback);
     }
 
     unregisterCallback(callback) {
-        const index = this.callbacks.indexOf(callback);
+        const index = this.renderCallbacks.indexOf(callback);
         if (index !== -1) {
-            this.callbacks.splice(index, 1);
+            this.renderCallbacks.splice(index, 1);
+        }
+    }
+
+    registerResizeCallback(callback) {
+        this.resizeCallbacks.push(callback);
+    }
+
+    unregisterResizeerCallback(callback) {
+        const index = this.resizeCallbacks.indexOf(callback);
+        if (index !== -1) {
+            this.resizeCallbacks.splice(index, 1);
         }
     }
 }
