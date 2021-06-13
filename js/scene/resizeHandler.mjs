@@ -8,6 +8,6 @@ export const resizeHandler = (renderer, callbacks = []) => () => {
     renderer.camera.aspect = window.innerWidth / window.innerHeight;
     renderer.camera.updateProjectionMatrix();
     for (const fn of callbacks) {
-        fn.call(null, renderer)
+        fn.call(null, renderer);
     }
 };

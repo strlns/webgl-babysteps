@@ -20,7 +20,6 @@ export default class Renderer {
 
     resizeCallbacks = [];
 
-
     constructor(camera, scene) {
         this.camera = camera;
         this.scene = scene;
@@ -40,7 +39,7 @@ export default class Renderer {
             this.frame++;
         };
         animate();
-        window.addEventListener('resize', resizeHandler(this));
+        window.addEventListener('resize', resizeHandler(this, this.resizeCallbacks));
     }
 
     registerCallback(callback) {
@@ -58,7 +57,7 @@ export default class Renderer {
         this.resizeCallbacks.push(callback);
     }
 
-    unregisterResizeerCallback(callback) {
+    unregisterResizeCallback(callback) {
         const index = this.resizeCallbacks.indexOf(callback);
         if (index !== -1) {
             this.resizeCallbacks.splice(index, 1);

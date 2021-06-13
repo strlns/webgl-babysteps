@@ -78,10 +78,10 @@ export default class RangeSlider {
     }
 
     setStyles(styles) {
-        setStyles(styles, this.domElement)
+        setStyles(styles, this.domElement);
     }
 
     setWrapperStyles(styles) {
-        setStyles(styles, this.wrapper)
+        setStyles(styles, this.wrapper);
     }
 }
