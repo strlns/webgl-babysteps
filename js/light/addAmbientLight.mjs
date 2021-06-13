@@ -1,4 +1,4 @@
-import {AmbientLight} from "../lib/three.module.js";
+import {AmbientLight} from "../lib/three.module.js"
 
 export default function addAmbientLight(
     scene,

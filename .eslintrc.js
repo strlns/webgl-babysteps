@@ -9,5 +9,11 @@ module.exports = {
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "rules": {}
+    "rules": {
+        /*
+        trying this out here for the first time, otherwise i always end up
+        with a mixed style.
+         */
+        "semi": ["warn", "never"]
+    }
 };
