@@ -63,4 +63,8 @@ export default class Renderer {
             this.resizeCallbacks.splice(index, 1);
         }
     }
+
+    getCanvasParent() {
+        return this.renderer.domElement.parentNode;
+    }
 }

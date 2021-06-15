@@ -1,8 +1,9 @@
 import setStyles from "../util/setStyles.mjs";
+import {BaseControl} from "./BaseControl.mjs";
 
 const DEFAULT_IF_NOT_GIVEN = 0;
 
-export default class RangeSlider {
+export default class RangeSlider extends BaseControl {
     /**
      * @type number
      */
@@ -12,12 +13,6 @@ export default class RangeSlider {
      * @type HTMLInputElement
      */
     domElement;
-
-    /**
-     * @type HTMLDivElement
-     */
-    wrapper;
-
 
     getValue() {
         return this.value;
@@ -45,6 +40,7 @@ export default class RangeSlider {
     }
 
     constructor(min = 0, max = 100, step = 1, defaultValue = DEFAULT_IF_NOT_GIVEN) {
+        super();
         this.value = defaultValue;
         this.wrapper = document.createElement('DIV');
         this.domElement = document.createElement('INPUT');
@@ -56,18 +52,6 @@ export default class RangeSlider {
         this.domElement.step = step.toString();
     }
 
-    /**
-     * @param {Node & ParentNode} parent
-     */
-    attachToElement(parent) {
-        this.wrapper.appendChild(this.domElement);
-        parent.appendChild(this.wrapper);
-    }
-
-    destroy() {
-        this.domElement.parentNode.removeChild(this.domElement);
-    }
-
     onChange(callbackFn) {
         const handler = event => {
             this.value = event.target.value;
@@ -75,13 +59,5 @@ export default class RangeSlider {
         };
         this.domElement.addEventListener('change', handler);
         this.domElement.addEventListener('input', handler);
-    }
-
-    setStyles(styles) {
-        setStyles(styles, this.domElement);
-    }
-
-    setWrapperStyles(styles) {
-        setStyles(styles, this.wrapper);
     }
 }
