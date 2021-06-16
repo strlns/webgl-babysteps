@@ -68,27 +68,13 @@ export default class ColorTransition {
      */
     // noinspection JSBitwiseOperatorUsage
     step() {
-        this.currentColor += (this.redComponentRatio * (this.redDiff / this.steps)) & RED
-        this.currentColor += (this.greenComponentRatio * (this.greenDiff / this.steps)) & GREEN
-        this.currentColor += (this.blueComponentRatio * (this.blueDiff / this.steps)) & BLUE
+        this.currentColor += (this.redComponentRatio * (this.redDiff / this.steps)) & RED;
+        this.currentColor += (this.greenComponentRatio * (this.greenDiff / this.steps)) & GREEN;
+        this.currentColor += (this.blueComponentRatio * (this.blueDiff / this.steps)) & BLUE;
         return Math.floor(this.currentColor);
     }
-
-// if(r > 0 && b == 0){
-//      r--;
-//      g++;
-// }
-// if(g > 0 && r == 0){
-//      g--;
-//      b++;
-// }
-// if(b > 0 && g == 0){
-//      r++;
-//      b--;
-// }
 }
 
 const RED = 0xff0000;
 const GREEN = 0x00ff00;
 const BLUE = 0x0000ff;
-

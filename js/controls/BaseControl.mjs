@@ -34,4 +34,20 @@ export class BaseControl {
     setWrapperStyles(styles) {
         setStyles(styles, this.wrapper);
     }
+
+    /**
+     * @param {string} label
+     */
+    addLabel(label) {
+        const labelEl = document.createElement('LABEL');
+        labelEl.innerText = label;
+        if (this.domElement && this.domElement.id !== undefined) {
+            labelEl.setAttribute('for', this.domElement.id);
+        }
+        this.wrapper.appendChild(labelEl);
+        setStyles({
+            right: 0,
+            bottom: '100%'
+        }, labelEl);
+    }
 }

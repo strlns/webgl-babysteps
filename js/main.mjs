@@ -1,12 +1,14 @@
 import throwIfNoWebGl from "./webgl-availability/throwIfNoWebGl.mjs";
 import initScene from "./scene/initScene.mjs";
-import {Cube} from "./polyeder/polyeder.mjs";
+import {Cube, DEFAULT_CUBE_COLOR} from "./polyeder/polyeder.mjs";
 import Renderer from "./renderer/Renderer.mjs";
 import addDirectionalLight from "./light/addDirectionalLight.mjs";
 import addAmbientLight from "./light/addAmbientLight.mjs";
 import RangeSlider from "./controls/RangeSlider.mjs";
 import ColorTransition from "./util/ColorTransition.mjs";
 import PauseButton from "./controls/PauseButton.mjs";
+import ColorInput from "./controls/ColorInput.mjs";
+import Checkbox from "./controls/Checkbox.mjs";
 
 throwIfNoWebGl();
 
@@ -18,6 +20,10 @@ const FRAMERATE = 60;
 
 const CONTROLS_MARGIN = '1rem';
 
+let cubeColorFixed = DEFAULT_CUBE_COLOR;
+
+let isColorCycling = true;
+
 document.addEventListener('DOMContentLoaded', () => {
     const {scene, camera} = initScene();
     const renderer = new Renderer(camera, scene);
@@ -26,10 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const cube = Cube(.75);
     scene.add(cube);
     camera.updateProjectionMatrix();
-    const getNewTargetColor = () => Math.floor(cube.material.color.getHex() + Math.random() * 0xffffff) % 0xffffff;
+    const getNewRandomTargetColor = () => Math.floor(Math.random() * (0xffffff))
     const getTransition = () => new ColorTransition(
         cube.material.color.getHex(),
-        getNewTargetColor(),
+        getNewRandomTargetColor(),
         scaledFramerate()
     );
     let transition = getTransition();
@@ -37,11 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer.registerCallback((frame) => {
         if (paused) return;
         if (frame % scaledFramerate() === 1) {
-            transition = getTransition()
+            if (isColorCycling) {
+                transition = getTransition();
+            }
         }
-        cube.material.color.setHex(
-            transition.step()
-        )
+        if (isColorCycling) {
+            cube.material.color.setHex(
+                transition.step()
+            );
+        } else if (cube.material.color.getHex() !== cubeColorFixed) {
+            cube.material.color.setHex(cubeColorFixed);
+        }
 
     });
     renderer.startRendering();
@@ -51,6 +63,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const pauseBtn = addPauseButton(renderer.getCanvasParent());
     pauseBtn.onClick(() => paused = !paused);
+
+    const colorInput = addColorInput(renderer.getCanvasParent());
+    colorInput.onChange(val => {
+        cubeColorFixed = val;
+    });
+
+    const cycleCheckbox = addCycleCheckbox(renderer.getCanvasParent());
+    cycleCheckbox.onChange(val => {
+        isColorCycling = val;
+    });
 });
 
 function addPauseButton(parentNode) {
@@ -60,6 +82,7 @@ function addPauseButton(parentNode) {
     btn.setWrapperStyles(
         {
             ...wrapperBaseStyles,
+            top: CONTROLS_MARGIN,
             right: CONTROLS_MARGIN
         }
     );
@@ -79,6 +102,34 @@ function addPauseButton(parentNode) {
     return btn;
 }
 
+function addCycleCheckbox(parentNode) {
+    const input = new Checkbox(true);
+    input.addLabel('Cycle color randomly')
+    input.attachToElement(parentNode);
+    input.setWrapperStyles(
+        {
+            ...wrapperBaseStyles,
+            bottom: CONTROLS_MARGIN,
+            right: CONTROLS_MARGIN
+        }
+    )
+    return input;
+}
+
+function addColorInput(parentNode) {
+    const input = new ColorInput();
+    input.setWrapperStyles(
+        {
+            ...wrapperBaseStyles,
+            bottom: CONTROLS_MARGIN,
+            left: CONTROLS_MARGIN,
+            flexDirection: 'column'
+        }
+    );
+    input.attachToElement(parentNode);
+    return input;
+}
+
 function addSpeedControl(parentNode) {
     const speedControl = new RangeSlider(
         0.25,
@@ -86,30 +137,32 @@ function addSpeedControl(parentNode) {
         0.25,
         1
     );
-    speedControl.attachToElement(parentNode);
     speedControl.setStyles({
         maxWidth: '50vw',
         minWidth: '200px',
-        width: '24rem'
+        width: '24rem',
+        top: CONTROLS_MARGIN,
     });
     speedControl.setWrapperStyles(
         {
             ...wrapperBaseStyles,
-            left: '1rem',
+            top: CONTROLS_MARGIN,
+            left: CONTROLS_MARGIN,
             flexDirection: 'column'
         }
     );
-    speedControl.setLabel('Speed');
+    speedControl.addLabel('Speed');
+    speedControl.attachToElement(parentNode);
     return speedControl;
 }
 
+
 const wrapperBaseStyles = {
     position: 'absolute',
-    top: '1rem',
     display: 'flex',
     alignItems: 'center',
-    fontSize: '1.5rem'
-}
+    fontSize: '1.125rem'
+};
 
 const scaledFramerate = () => Math.floor(FRAMERATE / rotationSpeed);
 

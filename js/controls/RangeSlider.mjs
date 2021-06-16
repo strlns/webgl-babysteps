@@ -1,52 +1,36 @@
-import setStyles from "../util/setStyles.mjs";
 import {BaseControl} from "./BaseControl.mjs";
+import {getNewElementId} from "../util/getNewElementId.mjs";
 
 const DEFAULT_IF_NOT_GIVEN = 0;
 
 export default class RangeSlider extends BaseControl {
     /**
+     * @private
      * @type number
      */
-    value;
+    _value;
+
+    get value() {
+        return this._value;
+    }
+
+    set value(value) {
+        this._value = value;
+        this.domElement.value = this._value.toString();
+    }
 
     /**
      * @type HTMLInputElement
      */
     domElement;
 
-    getValue() {
-        return this.value;
-    }
-
-    /**
-     *
-     * @param {number} value
-     */
-    setValue(value) {
-        this.value = value;
-    }
-
-    /**
-     * @param {string} label
-     */
-    setLabel(label) {
-        const labelEl = document.createElement('LABEL');
-        labelEl.innerText = label;
-        this.wrapper.appendChild(labelEl);
-        setStyles({
-            right: 0,
-            bottom: '100%'
-        }, labelEl);
-    }
-
     constructor(min = 0, max = 100, step = 1, defaultValue = DEFAULT_IF_NOT_GIVEN) {
         super();
-        this.value = defaultValue;
-        this.wrapper = document.createElement('DIV');
+        this._value = defaultValue;
         this.domElement = document.createElement('INPUT');
-        this.domElement.id = Math.random().toString().replace(/0\./, '').slice(0, 12);
+        this.domElement.id = getNewElementId();
         this.domElement.type = 'range';
-        this.domElement.value = this.value.toString();
+        this.domElement.value = this._value.toString();
         this.domElement.min = min.toString();
         this.domElement.max = max.toString();
         this.domElement.step = step.toString();
@@ -54,8 +38,8 @@ export default class RangeSlider extends BaseControl {
 
     onChange(callbackFn) {
         const handler = event => {
-            this.value = event.target.value;
-            callbackFn.call(null, this.value);
+            this._value = event.target.value;
+            callbackFn.call(null, this._value);
         };
         this.domElement.addEventListener('change', handler);
         this.domElement.addEventListener('input', handler);
