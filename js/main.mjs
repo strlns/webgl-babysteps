@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cube = Cube(.75);
     scene.add(cube);
     camera.updateProjectionMatrix();
-    const getNewRandomTargetColor = () => Math.floor(Math.random() * (0xffffff))
+    const getNewRandomTargetColor = () => Math.floor(Math.random() * (0xffffff));
     const getTransition = () => new ColorTransition(
         cube.material.color.getHex(),
         getNewRandomTargetColor(),
@@ -120,7 +120,7 @@ function addCycleCheckbox(parentNode) {
     const input = new Checkbox(true);
     input.setLabel('Cycle color randomly');
     input.setWrapperStyles({...wrapperBaseStyles, flexDirection: 'row'});
-    input.setStyles({order: -1, marginRight: '0.5em'})
+    input.setStyles({order: -1, marginRight: '0.5em'});
     input.attachToElement(parentNode);
     return input;
 }
@@ -129,7 +129,7 @@ function addColorInput(parentNode) {
     const input = new ColorInput(DEFAULT_CUBE_COLOR, true);
     input.attachToElement(parentNode);
     input.setLabel('Set fixed color');
-    input.setWrapperStyles({...wrapperBaseStyles, flexDirection: 'row'})
+    input.setWrapperStyles({...wrapperBaseStyles, flexDirection: 'row'});
     setStyles({
         marginLeft: '.5em'
     }, input.label);

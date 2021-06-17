@@ -11,7 +11,7 @@ import {getNewElementId} from "../util/getNewElementId.mjs";
 const parseHexString = (str) => {
     const valueToParse = str.indexOf('#') === 0 ? str.slice(1, 7) : str;
     return parseInt(valueToParse, 16);
-}
+};
 
 export default class ColorInput extends BaseControl {
     /**
@@ -54,7 +54,7 @@ export default class ColorInput extends BaseControl {
                     cursor: value ? 'not-allowed' : null
                 },
                 this.wrapper
-            )
+            );
         }
     }
 

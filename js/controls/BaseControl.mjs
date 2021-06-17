@@ -36,11 +36,12 @@ export class BaseControl {
                         key.slice(1)
                     );
                     if (typeof descriptor.set === 'function') {
-                        this[classPropName] = this[classPropName]
+                        /*eslint-disable-next-line no-self-assign*/
+                        this[classPropName] = this[classPropName];
                     }
                 }
             }
-        )
+        );
     }
 
     destroy() {
@@ -60,7 +61,7 @@ export class BaseControl {
      */
     setLabel(label) {
         if (this.label !== undefined) {
-            document.removeChild(this.label)
+            document.removeChild(this.label);
         }
         this.label = document.createElement('LABEL');
         this.label.innerText = label;
