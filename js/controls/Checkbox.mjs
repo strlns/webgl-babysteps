@@ -6,14 +6,33 @@ export default class Checkbox extends BaseControl {
      * @private
      * @type boolean
      */
-    _checked;
+    _checked = false;
     get checked() {
         return this._checked;
     }
 
     set checked(value) {
         this._checked = value;
-        this.domElement.checked = value;
+        if (this.domElement !== undefined) {
+            this.domElement.checked = value;
+        }
+    }
+
+    /**
+     *
+     * @private
+     * @type boolean
+     */
+    _disabled;
+    get disabled() {
+        return this._disabled;
+    }
+
+    set disabled(value) {
+        this._disabled = value;
+        if (this.domElement !== undefined) {
+            this.domElement.disabled = value;
+        }
     }
 
     /**
@@ -21,12 +40,13 @@ export default class Checkbox extends BaseControl {
      */
     domElement;
 
-    constructor(checked = false) {
+    constructor(checked = false, disabled = false) {
         super();
         this.domElement = document.createElement('INPUT');
         this.domElement.id = getNewElementId();
         this.domElement.type = 'checkbox';
         this.checked = checked;
+        this.disabled = disabled;
     }
 
     /**

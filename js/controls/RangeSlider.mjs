@@ -16,7 +16,9 @@ export default class RangeSlider extends BaseControl {
 
     set value(value) {
         this._value = value;
-        this.domElement.value = this._value.toString();
+        if (value !== undefined) {
+            this.domElement.value = this._value.toString();
+        }
     }
 
     /**

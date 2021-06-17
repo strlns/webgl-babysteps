@@ -11,6 +11,11 @@ export class BaseControl {
      */
     wrapper;
 
+    /**
+     * @type HTMLLabelElement
+     */
+    label;
+
     constructor() {
         this.wrapper = document.createElement('DIV');
     }
@@ -21,6 +26,21 @@ export class BaseControl {
     attachToElement(parent) {
         this.wrapper.appendChild(this.domElement);
         parent.appendChild(this.wrapper);
+        //Call setters again because of possible side-effects affecting e.g. the DOM element.
+        //This was a weird exercise and bad idea :o)
+        Object.getOwnPropertyNames(this).forEach(key => {
+                if (key.indexOf('_') === 0) {
+                    const classPropName = key.slice(1);
+                    const descriptor = Object.getOwnPropertyDescriptor(
+                        Object.getPrototypeOf(this),
+                        key.slice(1)
+                    );
+                    if (typeof descriptor.set === 'function') {
+                        this[classPropName] = this[classPropName]
+                    }
+                }
+            }
+        )
     }
 
     destroy() {
@@ -38,16 +58,15 @@ export class BaseControl {
     /**
      * @param {string} label
      */
-    addLabel(label) {
-        const labelEl = document.createElement('LABEL');
-        labelEl.innerText = label;
-        if (this.domElement && this.domElement.id !== undefined) {
-            labelEl.setAttribute('for', this.domElement.id);
+    setLabel(label) {
+        if (this.label !== undefined) {
+            document.removeChild(this.label)
         }
-        this.wrapper.appendChild(labelEl);
-        setStyles({
-            right: 0,
-            bottom: '100%'
-        }, labelEl);
+        this.label = document.createElement('LABEL');
+        this.label.innerText = label;
+        if (this.domElement && this.domElement.id !== undefined) {
+            this.label.setAttribute('for', this.domElement.id);
+        }
+        this.wrapper.appendChild(this.label);
     }
 }

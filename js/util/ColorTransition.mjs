@@ -2,12 +2,13 @@
 
 /**
  * Simple color transition utility.
+ * @author Moritz Rehbach
  *
  * Just "pop" values using the step() method,
  * and specify in advance how many steps the transition should take.
  * Timing must be managed externally, e.g. using requestAnimationFrame.
  *
- * If steps should be skipped, the skip() method can be used.
+ * If steps should be skipped, use the step() method and discard the result, or add a skip() method.
  */
 export default class ColorTransition {
     /**
@@ -66,7 +67,6 @@ export default class ColorTransition {
      * Advance transition by one step and return intermediate color.
      * @return number Current hex color value
      */
-    // noinspection JSBitwiseOperatorUsage
     step() {
         this.currentColor += (this.redComponentRatio * (this.redDiff / this.steps)) & RED;
         this.currentColor += (this.greenComponentRatio * (this.greenDiff / this.steps)) & GREEN;

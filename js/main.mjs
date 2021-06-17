@@ -9,6 +9,7 @@ import ColorTransition from "./util/ColorTransition.mjs";
 import PauseButton from "./controls/PauseButton.mjs";
 import ColorInput from "./controls/ColorInput.mjs";
 import Checkbox from "./controls/Checkbox.mjs";
+import setStyles from "./util/setStyles.mjs";
 
 throwIfNoWebGl();
 
@@ -64,14 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const pauseBtn = addPauseButton(renderer.getCanvasParent());
     pauseBtn.onClick(() => paused = !paused);
 
-    const colorInput = addColorInput(renderer.getCanvasParent());
-    colorInput.onChange(val => {
-        cubeColorFixed = val;
-    });
+    const colorControlWrap = document.createElement('DIV');
+    setStyles({
+        ...wrapperBaseStyles,
+        position: 'absolute',
+        right: CONTROLS_MARGIN,
+        bottom: CONTROLS_MARGIN,
+        minHeight: '4rem',
+        justifyContent: 'space-between'
+    }, colorControlWrap);
+    renderer.getCanvasParent().appendChild(colorControlWrap);
 
-    const cycleCheckbox = addCycleCheckbox(renderer.getCanvasParent());
+    const cycleCheckbox = addCycleCheckbox(colorControlWrap);
     cycleCheckbox.onChange(val => {
         isColorCycling = val;
+        colorInput.disabled = val;
+    });
+
+    const colorInput = addColorInput(colorControlWrap);
+    colorInput.onChange(val => {
+        cubeColorFixed = val;
     });
 });
 
@@ -82,6 +95,7 @@ function addPauseButton(parentNode) {
     btn.setWrapperStyles(
         {
             ...wrapperBaseStyles,
+            position: 'absolute',
             top: CONTROLS_MARGIN,
             right: CONTROLS_MARGIN
         }
@@ -104,29 +118,21 @@ function addPauseButton(parentNode) {
 
 function addCycleCheckbox(parentNode) {
     const input = new Checkbox(true);
-    input.addLabel('Cycle color randomly')
+    input.setLabel('Cycle color randomly');
+    input.setWrapperStyles({...wrapperBaseStyles, flexDirection: 'row'});
+    input.setStyles({order: -1, marginRight: '0.5em'})
     input.attachToElement(parentNode);
-    input.setWrapperStyles(
-        {
-            ...wrapperBaseStyles,
-            bottom: CONTROLS_MARGIN,
-            right: CONTROLS_MARGIN
-        }
-    )
     return input;
 }
 
 function addColorInput(parentNode) {
-    const input = new ColorInput();
-    input.setWrapperStyles(
-        {
-            ...wrapperBaseStyles,
-            bottom: CONTROLS_MARGIN,
-            left: CONTROLS_MARGIN,
-            flexDirection: 'column'
-        }
-    );
+    const input = new ColorInput(DEFAULT_CUBE_COLOR, true);
     input.attachToElement(parentNode);
+    input.setLabel('Set fixed color');
+    input.setWrapperStyles({...wrapperBaseStyles, flexDirection: 'row'})
+    setStyles({
+        marginLeft: '.5em'
+    }, input.label);
     return input;
 }
 
@@ -146,21 +152,21 @@ function addSpeedControl(parentNode) {
     speedControl.setWrapperStyles(
         {
             ...wrapperBaseStyles,
+            position: 'absolute',
             top: CONTROLS_MARGIN,
             left: CONTROLS_MARGIN,
-            flexDirection: 'column'
         }
     );
-    speedControl.addLabel('Speed');
+    speedControl.setLabel('Speed');
     speedControl.attachToElement(parentNode);
     return speedControl;
 }
 
 
-const wrapperBaseStyles = {
-    position: 'absolute',
+export const wrapperBaseStyles = {
     display: 'flex',
     alignItems: 'center',
+    flexDirection: 'column',
     fontSize: '1.125rem'
 };
 

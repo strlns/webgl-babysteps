@@ -33,28 +33,40 @@ export default class ColorInput extends BaseControl {
     }
 
     /**
+     *
+     * @private
+     * @type boolean
+     */
+    _disabled;
+    get disabled() {
+        return this._disabled;
+    }
+
+    set disabled(value) {
+        this._disabled = value;
+        if (this.domElement !== undefined) {
+            this.domElement.disabled = value;
+        }
+        if (this.wrapper !== undefined) {
+            setStyles(
+                {
+                    opacity: value ? 0.25 : 1,
+                    cursor: value ? 'not-allowed' : null
+                },
+                this.wrapper
+            )
+        }
+    }
+
+    /**
      * @type HTMLInputElement
      */
     domElement;
 
-
-    /**
-     * @param {string} label
-     */
-    addLabel(label) {
-        const labelEl = document.createElement('LABEL');
-        labelEl.innerText = label;
-        labelEl.setAttribute('for', this.domElement.id);
-        this.wrapper.appendChild(labelEl);
-        setStyles({
-            right: 0,
-            bottom: '100%'
-        }, labelEl);
-    }
-
-    constructor() {
+    constructor(value = DEFAULT_CUBE_COLOR, disabled = false) {
         super();
-        this._value = DEFAULT_CUBE_COLOR;
+        this.value = value;
+        this.disabled = disabled;
         this.wrapper = document.createElement('DIV');
         this.domElement = document.createElement('INPUT');
         this.domElement.id = getNewElementId();
