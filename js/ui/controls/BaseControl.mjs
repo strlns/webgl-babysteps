@@ -1,4 +1,4 @@
-import setStyles from "../util/setStyles.mjs";
+import setStyles from "../../util/setStyles.mjs";
 
 export class BaseControl {
     /**

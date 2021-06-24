@@ -1,4 +1,4 @@
-import {WebGLRenderer} from "../lib/three.module.js";
+import {WebGLRenderer} from "../lib/three.mjs";
 import {resizeHandler} from "../scene/resizeHandler.mjs";
 
 export default class Renderer {
@@ -23,9 +23,16 @@ export default class Renderer {
     constructor(camera, scene) {
         this.camera = camera;
         this.scene = scene;
-        this.renderer = new WebGLRenderer();
+        this.renderer = new WebGLRenderer({
+            antialias: true
+        });
+        this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    resetFrame() {
+        this.frame = 0;
     }
 
     startRendering() {

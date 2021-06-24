@@ -1,7 +1,7 @@
 import {BaseControl} from "./BaseControl.mjs";
-import {DEFAULT_CUBE_COLOR} from "../polyeder/polyeder.mjs";
-import setStyles from "../util/setStyles.mjs";
-import {getNewElementId} from "../util/getNewElementId.mjs";
+import {DEFAULT_CUBE_COLOR} from "../../polyeder/polyeder.mjs";
+import setStyles from "../../util/setStyles.mjs";
+import {getNewElementId} from "../../util/getNewElementId.mjs";
 
 /**
  *

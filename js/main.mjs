@@ -4,12 +4,13 @@ import {Cube, DEFAULT_CUBE_COLOR} from "./polyeder/polyeder.mjs";
 import Renderer from "./renderer/Renderer.mjs";
 import addDirectionalLight from "./light/addDirectionalLight.mjs";
 import addAmbientLight from "./light/addAmbientLight.mjs";
-import RangeSlider from "./controls/RangeSlider.mjs";
+import RangeSlider from "./ui/controls/RangeSlider.mjs";
 import ColorTransition from "./util/ColorTransition.mjs";
-import PauseButton from "./controls/PauseButton.mjs";
-import ColorInput from "./controls/ColorInput.mjs";
-import Checkbox from "./controls/Checkbox.mjs";
+import PauseButton from "./ui/controls/PauseButton.mjs";
+import ColorInput from "./ui/controls/ColorInput.mjs";
+import Checkbox from "./ui/controls/Checkbox.mjs";
 import setStyles from "./util/setStyles.mjs";
+import {SimpleDragListener} from "./ui/SimpleDragListener.mjs";
 
 throwIfNoWebGl();
 
@@ -24,6 +25,11 @@ const CONTROLS_MARGIN = '1rem';
 let cubeColorFixed = DEFAULT_CUBE_COLOR;
 
 let isColorCycling = true;
+/**
+ * suspend color transitions and rotation correction until next full quarter rotation
+ * @type {boolean}
+ */
+let suspend = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const {scene, camera} = initScene();
@@ -48,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transition = getTransition();
             }
         }
-        if (isColorCycling) {
+        if (isColorCycling && !suspend) {
             cube.material.color.setHex(
                 transition.step()
             );
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const speedControl = addSpeedControl(renderer.getCanvasParent());
     speedControl.onChange(value => {
         rotationSpeed = value;
+        suspend = true;
     });
     const pauseBtn = addPauseButton(renderer.getCanvasParent());
     pauseBtn.onClick(() => paused = !paused);
@@ -86,7 +93,20 @@ document.addEventListener('DOMContentLoaded', () => {
     colorInput.onChange(val => {
         cubeColorFixed = val;
     });
+
+    const mouseListener = new SimpleDragListener(renderer.renderer.domElement);
+    mouseListener.addCallback(({x, y}) => {
+        // noinspection JSSuspiciousNameCombination
+        cube.rotation.y += x;
+        // noinspection JSSuspiciousNameCombination
+        cube.rotation.x += y;
+        suspend = true;
+    });
 });
+
+// const getPosBySphericalCoords = (phi, theta, radius = 1) => {
+//     return new Vector3().setFromSphericalCoords(radius, phi, theta);
+// };
 
 function addPauseButton(parentNode) {
     const btn = new PauseButton();
@@ -184,14 +204,34 @@ const roundToNearestQuarterRotation = (radian) => {
     return Math.round(radian / (Math.PI * 0.5)) * Math.PI * 0.5;
 };
 
+const isFullRotation = (radian) => {
+    const rotations = radian / (Math.PI * 2);
+    const diff = Math.abs(rotations - Math.round(rotations));
+    return diff <= 0.01 || Math.round(diff) === 1;
+};
+
+
+/**
+ * get rotation to add for a single to correct rotation to quarters after speed change.
+ */
+const correctionRotation = (radian) => (roundToNearestQuarterRotation(radian) - radian) / 15;
+
 const cubeRotationCallback = cube => frame => {
     if (paused) return;
     const isInFirstHalfOfInterval = rotationInterval(frame, 2) > (scaledFramerate() - 1);
+    const doRotationWork = (cube, rotationAxes) => {
+        const [axis1, axis2] = rotationAxes;
+        if (suspend) {
+            cube.rotation[axis1] += correctionRotation(cube.rotation[axis1]);
+            suspend = !isFullRotation(cube.rotation[axis1]);
+        } else {
+            cube.rotation[axis1] = roundToNearestQuarterRotation(cube.rotation[axis1]);
+        }
+        cube.rotation[axis2] += quarterRotationFrame();
+    };
     if (isInFirstHalfOfInterval) {
-        cube.rotation.y = roundToNearestQuarterRotation(cube.rotation.y);
-        cube.rotation.x += quarterRotationFrame();
+        doRotationWork(cube, ['x', 'y']);
     } else {
-        cube.rotation.x = roundToNearestQuarterRotation(cube.rotation.x);
-        cube.rotation.y += quarterRotationFrame();
+        doRotationWork(cube, ['y', 'x']);
     }
 };

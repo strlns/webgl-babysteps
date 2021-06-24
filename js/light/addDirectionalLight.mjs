@@ -1,4 +1,4 @@
-import {DirectionalLight, DirectionalLightHelper} from "../lib/three.module.js";
+import {DirectionalLight, DirectionalLightHelper} from "../lib/three.mjs";
 
 
 export default function addDirectionalLight(

@@ -1,4 +1,4 @@
-import {PerspectiveCamera, Scene} from '../lib/three.module.js';
+import {PerspectiveCamera, Scene} from '../lib/three.mjs';
 
 let aspect,
     scene,

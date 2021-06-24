@@ -1,5 +1,5 @@
 import {BaseControl} from "./BaseControl.mjs";
-import {getNewElementId} from "../util/getNewElementId.mjs";
+import {getNewElementId} from "../../util/getNewElementId.mjs";
 
 const DEFAULT_IF_NOT_GIVEN = 0;
 

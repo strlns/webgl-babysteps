@@ -1,5 +1,5 @@
 import {BaseControl} from "./BaseControl.mjs";
-import {getNewElementId} from "../util/getNewElementId.mjs";
+import {getNewElementId} from "../../util/getNewElementId.mjs";
 
 export default class Checkbox extends BaseControl {
     /**

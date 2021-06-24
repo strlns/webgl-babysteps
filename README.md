@@ -17,6 +17,8 @@ The npm configuration here is purely for development convenience.
 
 None of the dependencies from npm end up in the frontend, as there is no bundling into `dist` or similar.
 
+There is no minification either, this project is purely for fun.
+
 ## browser-sync
 
 For development fun (live reload, no HMR), `browser-sync` is used.
